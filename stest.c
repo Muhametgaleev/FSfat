@@ -5,9 +5,10 @@
 
   //functions to automate the creation of the filesystem and the deletion
 void sOpen(){
+      system("cd ")
   system("mkdir testdir");
   system("./fat -s testdir");
-  //system("cd testdir");
+//  system("cd testdir");
 }
 void sClose(){
   system("fusermount -u testdir");
