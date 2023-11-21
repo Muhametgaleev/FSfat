@@ -551,6 +551,7 @@ int update_dir_entry(unsigned int cluster_num, struct fat_dir_entry *dir_entry, 
  */
 int update_file(unsigned int parent_cluster, struct fat_dir_entry dir_entry,
                 const char *buf, size_t size, off_t offset) {
+
     assert(dir_entry.type == DIR_ENTRY_TYPE_FILE);
 
     // Check if enough clusters to write to.
@@ -827,6 +828,7 @@ static int fat_statfs(const char *path, struct statvfs *stbuf) {
 
 static int fat_mknod(const char *path, mode_t mode, dev_t rdev) {
     (void) rdev;
+    (void) utimensat(NULL, NULL,NULL, NULL);
     if (S_ISREG(mode) == 0) {
         return -EACCES;
     }
@@ -838,6 +840,8 @@ static int fat_mknod(const char *path, mode_t mode, dev_t rdev) {
 
 static int fat_create(const char *path, mode_t mode, struct fuse_file_info *fi) {
     (void) fi;
+    unsigned int a = utimensat(NULL, path,NULL, NULL);
+    (void) a;
     fat_mknod(path, mode | S_IFREG, 0);
     return 0;
 }
@@ -988,6 +992,11 @@ static int fat_unlink(const char *path) {
     return update_dir_entry(parent_cluster, &dir_entry, true); // Remove dir entry from parent dir
 }
 
+static int fat_utimens(const char name, const struct timespec tv[2]){
+    (void) name;
+    return 0;
+}
+
 static struct fuse_operations fat_operations = {
         .init			= fat_init,
         .destroy		= fat_destroy,
@@ -1006,6 +1015,7 @@ static struct fuse_operations fat_operations = {
         .truncate		= fat_truncate,
         .release		= fat_release,
         .unlink		= fat_unlink,
+        .utimens = fat_utimens,
 };
 
 int main(int argc, char *argv[]) {
