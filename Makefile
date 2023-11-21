@@ -18,4 +18,12 @@ remake:
 	fusermount -u Test2
 	make
 	./fat -s Test2
+all_at_once:
+	fusermount -u Test2
+	make clean & make
+	./fat -s Test2
+start:
+	make
+	./fat -s Test2
+
 
