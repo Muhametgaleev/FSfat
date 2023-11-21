@@ -14,3 +14,8 @@ all:
 clean:
 	rm $(EXEC)
 	rm fat_disk
+remake:
+	fusermount -u Test2
+	make
+	./fat -s Test2
+
