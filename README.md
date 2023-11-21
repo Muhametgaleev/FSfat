@@ -7,7 +7,11 @@ This repo implements a simplified FAT filesystem, using Linux FUSE (libfuse) as 
 To compile, simply type(make sure that u have dir Test2):
 
 ```
-./run.sh
+make start
+```
+If you want to start at the begining(delete all your files)
+```
+make all_at_once
 ```
 Date and time are supported.
 
